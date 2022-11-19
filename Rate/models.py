@@ -73,6 +73,7 @@ class ProfessorLecture(models.Model):
         blank=True,
         verbose_name="استاد",
     )
+
     lecture = models.ForeignKey(
         to=Lecture,
         on_delete=models.SET_NULL,
@@ -82,24 +83,64 @@ class ProfessorLecture(models.Model):
 
     )
 
+
 class Semester(models.Model):
     class Meta:
         db_table = ''
         managed = True
         verbose_name = 'ترم'
         verbose_name_plural = 'ترم ها'
-    
+
     code = models.CharField(
+        primary_key=True,
         max_length=5,
         verbose_name="کد ترم تحصیلی",
         help_text="مانند: 4011",
     )
+
     year = models.PositiveSmallIntegerField(
         verbose_name="سال تحصیلی",
     )
-    
+
+    is_online = models.BooleanField(
+        default=False,
+        verbose_name="مجازی",
+    )
+
+
 class ProfessorLectureSemester(models.Model):
-    pass
+    """DOC STRING"""
+
+    professor = models.ForeignKey(
+        to=Professor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="استاد",
+    )
+
+    lecture = models.ForeignKey(
+        to=Lecture,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="درس",
+
+    )
+
+    semster = models.ForeignKey(
+        to=Semester,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="ترم تحصیلی"
+    )
+
+    number_of_students = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name="تعداد دانشجویان این درس در این ترم"
+    )
 
 
 class ConstValue(models.Model):
