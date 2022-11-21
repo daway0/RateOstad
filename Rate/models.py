@@ -2,8 +2,6 @@
 
 import datetime
 from django.db import models
-
-import Rate
 from . import helper
 
 
