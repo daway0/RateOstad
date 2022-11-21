@@ -4,6 +4,7 @@ from django.db import models
 
 class ConstValue(models.Model):
     """Docstring"""
+
     class Meta:
         db_table = ''
         managed = True
@@ -87,6 +88,7 @@ class Lecture(models.Model):
 
 class ProfessorLecture(models.Model):
     """This is a table that represent the Teachers' lectures"""
+
     class Meta:
         db_table = ''
         managed = True
