@@ -1,10 +1,31 @@
+"""Module DOC string"""
 from django.db import models
 
-# Create your models here.
+
+class ConstValue(models.Model):
+    """Docstring"""
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'ConstValue'
+        verbose_name_plural = 'ConstValues'
+
+    title = models.CharField(
+        max_length=50,
+        verbose_name="عنوان مقدار ثابت",
+    )
+    parent = models.ForeignKey(
+        ConstValue,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="مقدار ثابت پدر",
+    )
 
 
 class Professor(models.Model):
     """Docstring"""
+
     class Meta:
         db_table = ''
         managed = True
@@ -18,7 +39,6 @@ class Professor(models.Model):
     last_name_fa = models.CharField(
         max_length=50,
         verbose_name="نام خانوادگی",
-
     )
     first_name_en = models.CharField(
         max_length=50,
@@ -41,6 +61,7 @@ class Professor(models.Model):
 
 class Lecture(models.Model):
     """Docstring"""
+
     class Meta:
         db_table = ''
         managed = True
@@ -55,7 +76,7 @@ class Lecture(models.Model):
         verbose_name="واحد درس",
     )
     category = models.ForeignKey(
-        to=ConstValue,
+        ConstValue,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -66,25 +87,31 @@ class Lecture(models.Model):
 
 class ProfessorLecture(models.Model):
     """This is a table that represent the Teachers' lectures"""
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'ProfessorLecture'
+        verbose_name_plural = 'ProfessorLectures'
+
     professor = models.ForeignKey(
-        to=Professor,
+        Professor,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="استاد",
     )
-
     lecture = models.ForeignKey(
-        to=Lecture,
+        Lecture,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="درس",
-
     )
 
 
 class Semester(models.Model):
+    """DOC STRING"""
+
     class Meta:
         db_table = ''
         managed = True
@@ -97,11 +124,9 @@ class Semester(models.Model):
         verbose_name="کد ترم تحصیلی",
         help_text="مانند: 4011",
     )
-
     year = models.PositiveSmallIntegerField(
         verbose_name="سال تحصیلی",
     )
-
     is_online = models.BooleanField(
         default=False,
         verbose_name="مجازی",
@@ -111,49 +136,35 @@ class Semester(models.Model):
 class ProfessorLectureSemester(models.Model):
     """DOC STRING"""
 
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'ProfessorLectureSemester'
+        verbose_name_plural = 'ProfessorLectureSemesters'
+
     professor = models.ForeignKey(
-        to=Professor,
+        Professor,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="استاد",
     )
-
     lecture = models.ForeignKey(
-        to=Lecture,
+        Lecture,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="درس",
-
     )
-
     semster = models.ForeignKey(
-        to=Semester,
+        Semester,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="ترم تحصیلی"
     )
-
     number_of_students = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
         verbose_name="تعداد دانشجویان این درس در این ترم"
-    )
-
-
-class ConstValue(models.Model):
-    """Docstring"""
-    title = models.CharField(
-        max_length=50,
-        verbose_name="عنوان مقدار ثابت",
-    )
-    parent = models.ForeignKey(
-        to=ConstValue,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="مقدار ثابت پدر",
-
     )
