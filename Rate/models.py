@@ -1,5 +1,10 @@
 """Module DOC string"""
+
+import datetime
 from django.db import models
+
+import Rate
+from . import helper
 
 
 class ConstValue(models.Model):
@@ -16,7 +21,7 @@ class ConstValue(models.Model):
         verbose_name="عنوان مقدار ثابت",
     )
     parent = models.ForeignKey(
-        ConstValue,
+        'self',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -168,5 +173,109 @@ class ProfessorLectureSemester(models.Model):
     number_of_students = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name="تعداد دانشجویان این درس در این ترم"
+        verbose_name="تعداد دانشجویان این درس این ترم این استاد"
     )
+
+
+class Survey(models.Model):
+    """Docstring"""
+
+    class Meta:
+        pass
+
+    create_date = models.DateTimeField(
+        datetime.datetime.now,
+    )
+    related_class = models.ForeignKey(
+        ProfessorLectureSemester,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="کلاس درس",
+        help_text="برای هر واحد درسی هر استاد یک نظرسنجی برگزار خواهد شد برای مثال،" \
+                  "اگر استاد الف سه کلاس ریاضی 10 نفره داشته باشد، یک صفحه نظرسنجی" \
+                  "با ظرفیت 30 نفر برای اون واحد درسی ساخته خواهد شد",
+    )
+    expiration_date = models.DateTimeField(
+        default=helper.exp_after_5days,
+    )
+
+    @property
+    def number_of_students(self):
+        return self.related_class.number_of_students
+
+
+class Question(models.Model):
+    """Docstring"""
+
+    class Meta:
+        pass
+
+    survey = models.ForeignKey(
+        Survey,
+        on_delete=models.CASCADE,
+        verbose_name=""
+    )
+    question = models.CharField(
+        max_length=150,
+    )
+    note = models.CharField(
+        max_length=400,
+        null=True,
+        blank=True,
+    )
+    display_order = models.PositiveSmallIntegerField(
+        verbose_name="",
+
+    )
+    # todo this - implement this in ConstValue
+    type = models.ForeignKey(
+        ConstValue,
+        on_delete=models.CASCADE,
+        verbose_name="",
+        help_text="اینکه رادیو باتن باشه، یا چند گزینه ای یا بله و خیر و...",
+    )
+
+
+class User(models.Model):
+    """User model"""
+
+    # todo this - implement this
+    class Meta:
+        pass
+
+    # todo this - implement this in ConstValue
+    type = models.ForeignKey(
+        ConstValue,
+        on_delete=models.CASCADE,
+        verbose_name="",
+        help_text="دانشجو، استاد",
+    )
+
+
+class QuestionAnswerUser(models.Model):
+    """This is the ConstAnswer model"""
+
+    class Meta:
+        pass
+
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        verbose_name="",
+    )
+    answer = models.ForeignKey(
+        ConstValue,
+        on_delete=models.CASCADE,
+        verbose_name="",
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="",
+    )
+
+
+class Comment(models.Model):
+    """برای بیان نظرات شخصی نسبت به استاد از این استفاده می کنیم"""
+    pass
