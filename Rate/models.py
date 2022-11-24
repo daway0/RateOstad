@@ -231,6 +231,7 @@ class Survey(models.Model):
     expiration_date = models.DateTimeField(
         default=helper.exp_after_5days,
     )
+    is_open = models.BooleanField(default=True, verbose_name="فعال")
 
     class Meta:
         db_table = ''
