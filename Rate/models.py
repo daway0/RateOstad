@@ -278,7 +278,15 @@ class QuestionAnswerUser(models.Model):
 class Comment(models.Model):
     """برای بیان نظرات شخصی نسبت به استاد از این استفاده می کنیم"""
 
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="کاربر",
+    )
+    text = models.CharField(max_length=400, verbose_name="متن نظر")
+    upvote = models.PositiveSmallIntegerField(verbose_name="تعداد موافق ها")
+    downvote = models.PositiveSmallIntegerField(verbose_name="تعداد مخالف ها")
+    is_visible = models.BooleanField(default=True, verbose_name="نمایش داده شود؟")
+
     class Meta:
         pass
-
-    pass
