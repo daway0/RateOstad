@@ -8,12 +8,6 @@ from . import helper
 class ConstValue(models.Model):
     """Docstring"""
 
-    class Meta:
-        db_table = ''
-        managed = True
-        verbose_name = 'ConstValue'
-        verbose_name_plural = 'ConstValues'
-
     title = models.CharField(
         max_length=50,
         verbose_name="عنوان مقدار ثابت",
@@ -26,15 +20,15 @@ class ConstValue(models.Model):
         verbose_name="مقدار ثابت پدر",
     )
 
-
-class Professor(models.Model):
-    """Docstring"""
-
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'استاد'
-        verbose_name_plural = 'استاد ها'
+        verbose_name = 'ConstValue'
+        verbose_name_plural = 'ConstValues'
+
+
+class Professor(models.Model):
+    """Docstring"""
 
     first_name_fa = models.CharField(
         max_length=50,
@@ -62,15 +56,15 @@ class Professor(models.Model):
         help_text="عدد 0 نشان دهنده زن و عدد 1 مرد می باشد",
     )
 
-
-class Lecture(models.Model):
-    """Docstring"""
-
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'درس'
-        verbose_name_plural = 'درس ها'
+        verbose_name = 'استاد'
+        verbose_name_plural = 'استاد ها'
+
+
+class Lecture(models.Model):
+    """Docstring"""
 
     title = models.CharField(
         max_length=50,
@@ -88,15 +82,15 @@ class Lecture(models.Model):
         help_text="پایه، اصلی، تخصصی، تمرکز تخصصی، عمومی، اختیاری",
     )
 
-
-class ProfessorLecture(models.Model):
-    """This is a table that represent the Teachers' lectures"""
-
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'ProfessorLecture'
-        verbose_name_plural = 'ProfessorLectures'
+        verbose_name = 'درس'
+        verbose_name_plural = 'درس ها'
+
+
+class ProfessorLecture(models.Model):
+    """This is a table that represent the Teachers' lectures"""
 
     professor = models.ForeignKey(
         Professor,
@@ -113,15 +107,15 @@ class ProfessorLecture(models.Model):
         verbose_name="درس",
     )
 
-
-class Semester(models.Model):
-    """DOC STRING"""
-
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'ترم'
-        verbose_name_plural = 'ترم ها'
+        verbose_name = 'ProfessorLecture'
+        verbose_name_plural = 'ProfessorLectures'
+
+
+class Semester(models.Model):
+    """DOC STRING"""
 
     code = models.CharField(
         primary_key=True,
@@ -137,15 +131,15 @@ class Semester(models.Model):
         verbose_name="مجازی",
     )
 
-
-class ProfessorLectureSemester(models.Model):
-    """DOC STRING"""
-
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'ProfessorLectureSemester'
-        verbose_name_plural = 'ProfessorLectureSemesters'
+        verbose_name = 'ترم'
+        verbose_name_plural = 'ترم ها'
+
+
+class ProfessorLectureSemester(models.Model):
+    """DOC STRING"""
 
     professor = models.ForeignKey(
         Professor,
@@ -161,7 +155,7 @@ class ProfessorLectureSemester(models.Model):
         blank=True,
         verbose_name="درس",
     )
-    semster = models.ForeignKey(
+    semester = models.ForeignKey(
         Semester,
         on_delete=models.SET_NULL,
         null=True,
@@ -174,12 +168,15 @@ class ProfessorLectureSemester(models.Model):
         verbose_name="تعداد دانشجویان این درس این ترم این استاد"
     )
 
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'ProfessorLectureSemester'
+        verbose_name_plural = 'ProfessorLectureSemesters'
+
 
 class Survey(models.Model):
     """Docstring"""
-
-    class Meta:
-        pass
 
     create_date = models.DateTimeField(
         datetime.datetime.now,
@@ -190,13 +187,16 @@ class Survey(models.Model):
         null=True,
         blank=True,
         verbose_name="کلاس درس",
-        help_text="برای هر واحد درسی هر استاد یک نظرسنجی برگزار خواهد شد برای مثال،" \
-                  "اگر استاد الف سه کلاس ریاضی 10 نفره داشته باشد، یک صفحه نظرسنجی" \
+        help_text="برای هر واحد درسی هر استاد یک نظرسنجی برگزار خواهد شد برای مثال،"
+                  "اگر استاد الف سه کلاس ریاضی 10 نفره داشته باشد، یک صفحه نظرسنجی"
                   "با ظرفیت 30 نفر برای اون واحد درسی ساخته خواهد شد",
     )
     expiration_date = models.DateTimeField(
         default=helper.exp_after_5days,
     )
+
+    class Meta:
+        pass
 
     @property
     def number_of_students(self):
@@ -205,9 +205,6 @@ class Survey(models.Model):
 
 class Question(models.Model):
     """Docstring"""
-
-    class Meta:
-        pass
 
     survey = models.ForeignKey(
         Survey,
@@ -234,13 +231,14 @@ class Question(models.Model):
         help_text="اینکه رادیو باتن باشه، یا چند گزینه ای یا بله و خیر و...",
     )
 
+    class Meta:
+        pass
+
 
 class User(models.Model):
     """User model"""
 
     # todo this - implement this
-    class Meta:
-        pass
 
     # todo this - implement this in ConstValue
     type = models.ForeignKey(
@@ -250,12 +248,12 @@ class User(models.Model):
         help_text="دانشجو، استاد",
     )
 
+    class Meta:
+        pass
+
 
 class QuestionAnswerUser(models.Model):
     """This is the ConstAnswer model"""
-
-    class Meta:
-        pass
 
     question = models.ForeignKey(
         Question,
@@ -273,7 +271,14 @@ class QuestionAnswerUser(models.Model):
         verbose_name="",
     )
 
+    class Meta:
+        pass
+
 
 class Comment(models.Model):
     """برای بیان نظرات شخصی نسبت به استاد از این استفاده می کنیم"""
+
+    class Meta:
+        pass
+
     pass
