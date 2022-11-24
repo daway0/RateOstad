@@ -26,6 +26,9 @@ class ConstValue(models.Model):
         verbose_name = 'ConstValue'
         verbose_name_plural = 'ConstValues'
 
+    def __str__(self):
+        return self.title
+
 
 class Professor(models.Model):
     """Docstring"""
@@ -50,7 +53,7 @@ class Professor(models.Model):
         default=False,
         verbose_name="عضو هیات علمی",
     )
-    gender = models.BinaryField(
+    gender = models.BooleanField(
         default=0,
         verbose_name="جنیست",
         help_text="عدد 0 نشان دهنده زن و عدد 1 مرد می باشد",
@@ -59,8 +62,29 @@ class Professor(models.Model):
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'استاد'
-        verbose_name_plural = 'استاد ها'
+        verbose_name = 'Professor'
+        verbose_name_plural = 'Professors'
+
+    def __str__(self):
+        gender_prefix = self.gender_prefix_EN()
+        return f"{gender_prefix} " \
+               f"{self.first_name_en.capitalize()} " \
+               f"{self.last_name_en.capitalize()}"
+
+    def fullname_FA(self):
+        return f"{self.gender_prefix_FA()} " \
+               f"{self.first_name_fa} " \
+               f"{self.last_name_fa} "
+
+    def gender_prefix_EN(self):
+        if self.gender:
+            return "Mr."
+        return "Mrs."
+
+    def gender_prefix_FA(self):
+        if self.gender:
+            return "آقا"
+        return "بانو"
 
 
 class Lecture(models.Model):
@@ -85,8 +109,11 @@ class Lecture(models.Model):
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'درس'
-        verbose_name_plural = 'درس ها'
+        verbose_name = 'Lecture'
+        verbose_name_plural = 'Lectures'
+
+    def __str__(self):
+        return self.title
 
 
 class ProfessorLecture(models.Model):
@@ -113,6 +140,10 @@ class ProfessorLecture(models.Model):
         verbose_name = 'ProfessorLecture'
         verbose_name_plural = 'ProfessorLectures'
 
+    def __str__(self):
+        return f"{self.professor} " \
+               f"{self.lecture}"
+
 
 class Semester(models.Model):
     """DOC STRING"""
@@ -134,12 +165,17 @@ class Semester(models.Model):
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'ترم'
-        verbose_name_plural = 'ترم ها'
+        verbose_name = 'Semester'
+        verbose_name_plural = 'Semesters'
+
+    def __str__(self):
+        return f"{self.code}"
 
 
 class ProfessorLectureSemester(models.Model):
-    """DOC STRING"""
+    """DOC STRING
+        This is also called as the Class
+    """
 
     professor = models.ForeignKey(
         Professor,
@@ -165,7 +201,8 @@ class ProfessorLectureSemester(models.Model):
     number_of_students = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name="تعداد دانشجویان این درس این ترم این استاد"
+        verbose_name="تعداد دانشجویان",
+        help_text="تعداد دانشجویان این درس این ترم این استاد"
     )
 
     class Meta:
@@ -196,7 +233,10 @@ class Survey(models.Model):
     )
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'Survey'
+        verbose_name_plural = 'Surveys'
 
     @property
     def number_of_students(self):
@@ -232,12 +272,15 @@ class Question(models.Model):
     )
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'Question'
+        verbose_name_plural = 'Questions'
 
 
 class User(models.Model):
     """User model"""
-
+    # شاید نام جدول را به student تغییر دهیم
     # todo this - implement this
     # todo نحوه احراز هویت افراد در کوتاه ترین زمان ممکن، ترجیحا به صورت ناشناس تحقیق شود.
     # راه هایی مثل گرفتن کد ملی، شماره دانشجویی، شماره تلفن همراه اصلا
@@ -252,7 +295,10 @@ class User(models.Model):
     )
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
 
 
 class Answer(models.Model):
@@ -279,7 +325,10 @@ class Answer(models.Model):
     )
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'Answer'
+        verbose_name_plural = 'Answers'
 
 
 class QuestionAnswerUser(models.Model):
@@ -302,7 +351,10 @@ class QuestionAnswerUser(models.Model):
     )
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'QuestionAnswerUser'
+        verbose_name_plural = 'QuestionAnswerUsers'
 
 
 class Comment(models.Model):
@@ -319,4 +371,7 @@ class Comment(models.Model):
     is_visible = models.BooleanField(default=True, verbose_name="نمایش داده شود؟")
 
     class Meta:
-        pass
+        db_table = ''
+        managed = True
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
