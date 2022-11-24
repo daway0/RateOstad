@@ -8,6 +8,7 @@ from . import helper
 class ConstValue(models.Model):
     """Docstring"""
 
+    # todo آزمایشگاه ها در کدام دسته بندی درسی قرار می گیرند
     title = models.CharField(
         max_length=50,
         verbose_name="عنوان مقدار ثابت",
@@ -89,6 +90,7 @@ class Professor(models.Model):
 
 class Lecture(models.Model):
     """Docstring"""
+    # todo واحد های عملی و نظری رو باید در درس در نظر بگیرم
 
     title = models.CharField(
         max_length=50,
@@ -172,7 +174,7 @@ class Semester(models.Model):
         return f"{self.code}"
 
 
-class ProfessorLectureSemester(models.Model):
+class Class(models.Model):
     """DOC STRING
         This is also called as the Class
     """
@@ -211,15 +213,20 @@ class ProfessorLectureSemester(models.Model):
         verbose_name = 'ProfessorLectureSemester'
         verbose_name_plural = 'ProfessorLectureSemesters'
 
+    def __str__(self):
+        return f"{self.lecture} " \
+               f"{self.professor.fullname_FA()} " \
+               f"{self.semester}"
+
 
 class Survey(models.Model):
     """Docstring"""
 
     create_date = models.DateTimeField(
-        datetime.datetime.now,
+        auto_now_add=True,
     )
     related_class = models.ForeignKey(
-        ProfessorLectureSemester,
+        Class,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
