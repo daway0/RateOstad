@@ -29,7 +29,7 @@ class SemesterAdmin(admin.ModelAdmin):
     list_display = ["code", "year", "is_online"]
 
 
-class ProfessorLectureSemesterAdmin(admin.ModelAdmin):
+class ClassAdmin(admin.ModelAdmin):
     list_display = ["professor", "lecture",
                     "semester", "class_year", "number_of_students"]
 
@@ -44,9 +44,22 @@ class ProfessorLectureSemesterAdmin(admin.ModelAdmin):
         return obj.semester.year
 
 
+class SurveyAdmin(admin.ModelAdmin):
+    list_display = ["related_class", "creation_date",
+                    "expiration_date", "is_open"]
+    list_editable = ["is_open"]
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ["survey", "question", "type"]
+
+
 admin.site.register(ConstValue, ConstValueAdmin)
 admin.site.register(Professor, ProfessorAdmin)
 admin.site.register(Lecture, LectureAdmin)
 admin.site.register(ProfessorLecture, ProfessorLectureAdmin)
 admin.site.register(Semester, SemesterAdmin)
-admin.site.register(ProfessorLectureSemester, ProfessorLectureSemesterAdmin)
+admin.site.register(Class, ClassAdmin)
+admin.site.register(Survey, SurveyAdmin)
+admin.site.register(Question, QuestionAdmin)
+
