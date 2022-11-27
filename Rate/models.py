@@ -1,6 +1,6 @@
 """Module DOC string"""
 
-import datetime
+
 from django.db import models
 from . import helper
 
@@ -67,21 +67,24 @@ class Professor(models.Model):
         verbose_name_plural = 'Professors'
 
     def __str__(self):
-        gender_prefix = self.gender_prefix_EN()
+        gender_prefix = self.gender_prefix_EN
         return f"{gender_prefix} " \
                f"{self.first_name_en.capitalize()} " \
                f"{self.last_name_en.capitalize()}"
 
+    @property
     def fullname_FA(self):
-        return f"{self.gender_prefix_FA()} " \
+        return f"{self.gender_prefix_FA} " \
                f"{self.first_name_fa} " \
                f"{self.last_name_fa} "
 
+    @property
     def gender_prefix_EN(self):
         if self.gender:
             return "Mr."
         return "Mrs."
 
+    @property
     def gender_prefix_FA(self):
         if self.gender:
             return "آقا"
@@ -210,19 +213,19 @@ class Class(models.Model):
     class Meta:
         db_table = ''
         managed = True
-        verbose_name = 'ProfessorLectureSemester'
-        verbose_name_plural = 'ProfessorLectureSemesters'
+        verbose_name = 'Class'
+        verbose_name_plural = 'Classes'
 
     def __str__(self):
         return f"{self.lecture} " \
-               f"{self.professor.fullname_FA()} " \
+               f"{self.professor.fullname_FA} " \
                f"{self.semester}"
 
 
 class Survey(models.Model):
     """Docstring"""
 
-    create_date = models.DateTimeField(
+    creation_date = models.DateTimeField(
         auto_now_add=True,
     )
     related_class = models.ForeignKey(
