@@ -45,13 +45,42 @@ class ClassAdmin(admin.ModelAdmin):
 
 
 class SurveyAdmin(admin.ModelAdmin):
-    list_display = ["related_class", "creation_date",
-                    "expiration_date", "is_open"]
+    list_display = ["related_class",
+                    "professor",
+                    "lecture",
+                    "semester",
+                    "creation_date",
+                    "expiration_date",
+                    "is_open"]
     list_editable = ["is_open"]
+
+    def lecture(self, obj):
+        return obj.related_class.lecture
+
+    def professor(self, obj):
+        return obj.related_class.professor.fullname_FA
+
+    def semester(self, obj):
+        return obj.related_class.semester
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ["survey", "question", "type"]
+    list_display = ["question", "type"]
+
+
+class SurveyQuestionAdmin(admin.ModelAdmin):
+    list_display = ["survey", "question", "question_type"]
+
+    def question_type(self, obj):
+        return obj.question.type
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ["id", "type"]
+
+
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ["title"]
 
 
 admin.site.register(ConstValue, ConstValueAdmin)
@@ -62,4 +91,6 @@ admin.site.register(Semester, SemesterAdmin)
 admin.site.register(Class, ClassAdmin)
 admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Question, QuestionAdmin)
-
+admin.site.register(SurveyQuestion, SurveyQuestionAdmin)
+admin.site.register(User, UserAdmin)
+admin.site.register(Answer, AnswerAdmin)
