@@ -1,6 +1,5 @@
 """Module DOC string"""
 
-
 from django.db import models
 from . import helper
 
@@ -87,7 +86,7 @@ class Professor(models.Model):
     @property
     def gender_prefix_FA(self):
         if self.gender:
-            return "آقا"
+            return "آقای"
         return "بانو"
 
 
@@ -253,32 +252,30 @@ class Survey(models.Model):
     def number_of_students(self):
         return self.related_class.number_of_students
 
+    @property
+    def __str__(self):
+        return self.related_class.__str__
+
 
 class Question(models.Model):
     """Docstring"""
 
-    survey = models.ForeignKey(
-        Survey,
-        on_delete=models.CASCADE,
-        verbose_name=""
-    )
     question = models.CharField(
         max_length=150,
+        verbose_name="سوال"
     )
     note = models.CharField(
         max_length=400,
         null=True,
         blank=True,
+        verbose_name="توضیحات بیشتر برای سوال"
     )
-    display_order = models.PositiveSmallIntegerField(
-        verbose_name="",
 
-    )
     # todo this - implement this in ConstValue
     type = models.ForeignKey(
         ConstValue,
         on_delete=models.CASCADE,
-        verbose_name="",
+        verbose_name="نوع پاسخ سوال ",
         help_text="اینکه رادیو باتن باشه، یا چند گزینه ای یا بله و خیر و...",
     )
 
@@ -287,6 +284,38 @@ class Question(models.Model):
         managed = True
         verbose_name = 'Question'
         verbose_name_plural = 'Questions'
+
+    def __str__(self):
+        return self.question
+
+
+class SurveyQuestion(models.Model):
+    """junction"""
+    survey = models.ForeignKey(
+        Survey,
+        on_delete=models.CASCADE,
+        verbose_name="نظرسنجی مربوطه",
+    )
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        verbose_name="سوال مربوطه",
+    )
+    display_order = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name="ترتیب نمایش سوال",
+    )
+
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'SurveyQuestion'
+        verbose_name_plural = 'SurveyQuestions'
+
+    def __str__(self):
+        return f"{self.question.question} " \
+               f"{self.survey}"
 
 
 class User(models.Model):
@@ -310,6 +339,9 @@ class User(models.Model):
         managed = True
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+
+    def __str__(self):
+        return self.id.__str__()
 
 
 class Answer(models.Model):
@@ -341,24 +373,40 @@ class Answer(models.Model):
         verbose_name = 'Answer'
         verbose_name_plural = 'Answers'
 
+    def __str__(self):
+        return self.title
 
-class QuestionAnswerUser(models.Model):
-    """This is the ConstAnswer model"""
 
+class QuestionAnswer(models.Model):
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
-        verbose_name="",
+
+    )
+
+    answer = models.ForeignKey(
+        Answer,
+        on_delete=models.CASCADE,
+    )
+
+
+class SurveyQuestionAnswerUser(models.Model):
+    """This is the ConstAnswer model"""
+
+    servey_q = models.ForeignKey(
+        SurveyQuestion,
+        on_delete=models.CASCADE,
+        verbose_name="سوال خاص نظرسنجی",
     )
     answer = models.ForeignKey(
         ConstValue,
         on_delete=models.CASCADE,
-        verbose_name="",
+        verbose_name="پاسخ",
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name="",
+        verbose_name="کاربر",
     )
 
     class Meta:
